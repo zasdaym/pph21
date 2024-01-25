@@ -66,7 +66,7 @@ export function calculateTax(salary: number, bonus: number, status: TaxpayerStat
 
   const decemberMonthTax = calculateYearlyTax(taxableIncome) - regularMonthTax * 10 - bonusMonthTax
 
-  const totalTax = regularMonthTax + bonusMonthTax + decemberMonthTax
+  const totalTax = regularMonthTax * 10 + bonusMonthTax + decemberMonthTax
 
   return {
     taxRateCategory,
