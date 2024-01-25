@@ -13,22 +13,14 @@ export type CalculateTaxResult = {
   totalTax: number
 }
 
-export enum TaxpayerStatus {
-  TK0 = "TK/0",
-  TK1 = "TK/1",
-  TK2 = "TK/2",
-  TK3 = "TK/3",
-  K0 = "K/0",
-  K1 = "K/1",
-  K2 = "K/2",
-  K3 = "K/3",
-}
+const taxPayerStatuses = ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3"] as const
+export type TaxpayerStatus = (typeof taxPayerStatuses)[number];
 
-export function toTaxPayerStatus(status: string): TaxpayerStatus {
-  if (!Object.values(TaxpayerStatus).includes(status as TaxpayerStatus)) {
-    throw new Error(`Invalid TaxpayerStatus: ${status}`)
+export function stringToTaxpayerStatus(value: string): TaxpayerStatus {
+  if (!taxPayerStatuses.includes(value as TaxpayerStatus)) {
+    throw new Error(`Unknown TaxpayerStatus ${value}`)
   }
-  return status as TaxpayerStatus
+  return value as TaxpayerStatus
 }
 
 // Calculate PPh21 based on PP 58/2023. Only covers January-December simulation.
@@ -153,44 +145,40 @@ function calculateYearlyTax(taxableIncome: number): number {
 
 function getNonTaxableIncomeByTaxpayerStatus(status: TaxpayerStatus): number {
   switch (status) {
-    case TaxpayerStatus.TK0:
+    case "TK/0":
       return 54_000_000;
-    case TaxpayerStatus.TK1:
+    case "TK/1":
       return 58_500_000;
-    case TaxpayerStatus.TK2:
+    case "TK/2":
       return 63_000_000;
-    case TaxpayerStatus.TK3:
+    case "TK/3":
       return 67_500_000;
-    case TaxpayerStatus.K0:
+    case "K/0":
       return 58_500_000;
-    case TaxpayerStatus.K1:
+    case "K/1":
       return 63_000_000;
-    case TaxpayerStatus.K2:
+    case "K/2":
       return 67_500_000;
-    case TaxpayerStatus.K3:
+    case "K/3":
       return 72_000_000;
   }
 }
 
-enum TaxRateCategory {
-  A = "A",
-  B = "B",
-  C = "C",
-}
+type TaxRateCategory = "A" | "B" | "C"
 
 function getTaxRateCategoryByTaxpayerStatus(status: TaxpayerStatus): TaxRateCategory {
   switch (status) {
-    case TaxpayerStatus.TK0:
-    case TaxpayerStatus.TK1:
-    case TaxpayerStatus.K0:
-      return TaxRateCategory.A
-    case TaxpayerStatus.TK2:
-    case TaxpayerStatus.TK3:
-    case TaxpayerStatus.K1:
-    case TaxpayerStatus.K2:
-      return TaxRateCategory.B
-    case TaxpayerStatus.K3:
-      return TaxRateCategory.C
+    case "TK/0":
+    case "TK/1":
+    case "K/0":
+      return "A"
+    case "TK/2":
+    case "TK/3":
+    case "K/1":
+    case "K/2":
+      return "B"
+    case "K/3":
+      return "C"
   }
 }
 
@@ -201,7 +189,7 @@ type TaxRate = {
 
 function getTaxRatesByCategory(category: TaxRateCategory): TaxRate[] {
   switch (category) {
-    case TaxRateCategory.A:
+    case "A":
       return [
         { minAmount: 1_400_000_001, rate: 34 },
         { minAmount: 910_000_001, rate: 0.33 },
@@ -248,7 +236,7 @@ function getTaxRatesByCategory(category: TaxRateCategory): TaxRate[] {
         { minAmount: 5_400_001, rate: 0.0025 },
         { minAmount: 0, rate: 0 },
       ]
-    case TaxRateCategory.B:
+    case "B":
       return [
         { minAmount: 1_405_000_001, rate: 0.34 },
         { minAmount: 957_000_001, rate: 0.33 },
@@ -291,7 +279,7 @@ function getTaxRatesByCategory(category: TaxRateCategory): TaxRate[] {
         { minAmount: 6_200_001, rate: 0.0025 },
         { minAmount: 0, rate: 0 },
       ]
-    case TaxRateCategory.C:
+    case "C":
       return [
         { minAmount: 1_419_000_001, rate: 0.34 },
         { minAmount: 965_000_001, rate: 0.33 },

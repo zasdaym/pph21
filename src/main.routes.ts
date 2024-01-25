@@ -1,7 +1,7 @@
 import type { Context } from "@stricjs/app"
 import { routes } from "@stricjs/app"
 import Mustache from "mustache"
-import { TaxpayerStatus, calculateTax, toTaxPayerStatus } from "./tax"
+import { calculateTax, stringToTaxpayerStatus, type TaxpayerStatus } from "./tax"
 
 export default routes()
   .get('/', getHandler)
@@ -27,7 +27,7 @@ async function postHandler(context: Context) {
   let salary: number
   let bonus: number
   try {
-    status = toTaxPayerStatus(rawStatus!.toString())
+    status = stringToTaxpayerStatus(rawStatus?.toString()!)
     salary = Number(rawSalary)
     bonus = Number(rawBonus)
   } catch {
