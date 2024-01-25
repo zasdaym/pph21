@@ -25,11 +25,10 @@ export enum TaxpayerStatus {
 }
 
 export function toTaxPayerStatus(status: string): TaxpayerStatus {
-  let result = TaxpayerStatus.TK0
-  if (Object.values(TaxpayerStatus).includes(status as TaxpayerStatus)) {
-    result = status as TaxpayerStatus;
+  if (!Object.values(TaxpayerStatus).includes(status as TaxpayerStatus)) {
+    throw new Error(`Invalid TaxpayerStatus: ${status}`)
   }
-  return result
+  return status as TaxpayerStatus
 }
 
 // Calculate PPh21 based on PP 58/2023. Only covers January-December simulation.
