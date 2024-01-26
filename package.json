@@ -10,8 +10,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@stricjs/app": "^1.0.0-rc.34",
-    "@stricjs/utils": "^2.0.7",
     "hono": "^3.12.7",
     "mustache": "^4.2.0"
   }

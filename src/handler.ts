@@ -1,23 +1,19 @@
-import type { Context } from "@stricjs/app"
-import { routes } from "@stricjs/app"
+import type { Context } from "hono"
 import Mustache from "mustache"
 import { calculateTax, stringToTaxpayerStatus, type TaxpayerStatus } from "./tax"
 
-export default routes()
-  .get('/', getHandler)
-  .post('/', postHandler)
+const templateFile = Bun.file("./index.html")
+const template = await templateFile.text()
 
-const template = await Bun.file(import.meta.dir + "/index.html").text()
+export async function handler(context: Context) {
+  if (context.req.method === "get") {
+    return new Response(Mustache.render(template, {}), {
+      headers: {
+        "content-type": "text/html",
+      },
+    })
+  }
 
-function getHandler(_: Context) {
-  return new Response(Mustache.render(template, {}), {
-    headers: {
-      "content-type": "text/html",
-    },
-  })
-}
-
-async function postHandler(context: Context) {
   const formData = await context.req.formData()
   const rawStatus = formData.get("status")
   const rawSalary = formData.get("salary")
