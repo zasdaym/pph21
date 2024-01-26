@@ -7,7 +7,7 @@ const templateFile = Bun.file(indexHtml)
 const template = await templateFile.text()
 
 export async function handler(context: Context) {
-  if (context.req.method === "get") {
+  if (context.req.method === "GET") {
     return new Response(Mustache.render(template, {}), {
       headers: {
         "content-type": "text/html",
