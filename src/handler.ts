@@ -1,8 +1,9 @@
 import type { Context } from "hono"
 import Mustache from "mustache"
 import { calculateTax, stringToTaxpayerStatus, type TaxpayerStatus } from "./tax"
+import indexHtml from "./index.html"
 
-const templateFile = Bun.file("./index.html")
+const templateFile = Bun.file(indexHtml)
 const template = await templateFile.text()
 
 export async function handler(context: Context) {

@@ -7,5 +7,5 @@ RUN bun build src/index.ts --compile --outfile=server
 
 FROM gcr.io/distroless/base-debian12
 WORKDIR /app
-COPY --from=builder /app/server .
+COPY --from=builder /app/src/server .
 ENTRYPOINT [ "./server" ]
