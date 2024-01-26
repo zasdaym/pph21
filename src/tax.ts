@@ -57,10 +57,10 @@ export function calculateTax(salary: number, bonus: number, status: TaxpayerStat
     }
   }
 
-  const regularMonthTaxRate = taxRates.find(taxRate => taxRate.minAmount <= netMonthlyIncome)!
+  const regularMonthTaxRate = taxRates.find(taxRate => taxRate.minAmount <= salary)!
   const regularMonthTax = salary * regularMonthTaxRate.rate
 
-  const bonusMonthIncome = netMonthlyIncome + bonus
+  const bonusMonthIncome = salary + bonus
   const bonusMonthTaxRate = taxRates.find(taxRate => taxRate.minAmount <= bonusMonthIncome)!
   const bonusMonthTax = bonusMonthIncome * bonusMonthTaxRate.rate
 
