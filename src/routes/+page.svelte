@@ -15,24 +15,42 @@
   $: result = calculateTax(salary, bonus, status as TaxpayerStatus);
 </script>
 
-<h1>PPh 21 dengan Tarif Efektif Rata-rata (TER)</h1>
-<form action="" method="post">
-  <label for="salary">Gaji bulanan</label>
-  <input type="number" bind:value={salary} min="0" placeholder="10000000" />
-  <label for="bonus">Bonus tahunan (THR, Jasa produksi, dll)</label>
-  <input type="number" bind:value={bonus} min="0" placeholder="10000000" />
-  <label for="status">Status PTKP</label>
-  <select bind:value={status}>
-    <option value="TK/0">Tidak Kawin | 0 Tanggungan</option>
-    <option value="TK/1">Tidak Kawin | 1 Tanggungan</option>
-    <option value="TK/2">Tidak Kawin | 2 Tanggungan</option>
-    <option value="TK/2">Tidak Kawin | 3 Tanggungan</option>
-    <option value="K/0">Kawin | 0 Tanggungan</option>
-    <option value="K/1">Kawin | 1 Tanggungan</option>
-    <option value="K/2">Kawin | 2 Tanggungan</option>
-    <option value="K/3">Kawin | 3 Tanggungan</option>
-  </select>
-</form>
+<svelte:head>
+  <title>Kalkulator PPh 21 dengan Tarif Efektif Rata-rata (TER)</title>
+  <meta
+    name="description"
+    content="Kalkulator PPh 21 dengan Tarif Efektif Rata-rata (TER)"
+  />
+</svelte:head>
+
+<h1>Kalkulator PPh 21 dengan Tarif Efektif Rata-rata (TER)</h1>
+<label for="salary">Gaji bulanan</label>
+<input
+  id="salary"
+  type="number"
+  bind:value={salary}
+  min="0"
+  placeholder="10000000"
+/>
+<label for="bonus">Bonus tahunan (THR, Jasa produksi, dll)</label>
+<input
+  id="bonus"
+  type="number"
+  bind:value={bonus}
+  min="0"
+  placeholder="10000000"
+/>
+<label for="status">Status PTKP</label>
+<select id="status" bind:value={status}>
+  <option value="TK/0">Tidak Kawin | 0 Tanggungan</option>
+  <option value="TK/1">Tidak Kawin | 1 Tanggungan</option>
+  <option value="TK/2">Tidak Kawin | 2 Tanggungan</option>
+  <option value="TK/2">Tidak Kawin | 3 Tanggungan</option>
+  <option value="K/0">Kawin | 0 Tanggungan</option>
+  <option value="K/1">Kawin | 1 Tanggungan</option>
+  <option value="K/2">Kawin | 2 Tanggungan</option>
+  <option value="K/3">Kawin | 3 Tanggungan</option>
+</select>
 <table border="1">
   <thead>
     <tr>
