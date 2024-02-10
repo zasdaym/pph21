@@ -13,11 +13,11 @@ export type CalculateTaxResult = {
   totalTax: number
 }
 
-const taxPayerStatuses = ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3"] as const
-export type TaxpayerStatus = (typeof taxPayerStatuses)[number];
+export const taxpayerStatuses = ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3"] as const
+export type TaxpayerStatus = (typeof taxpayerStatuses)[number];
 
 export function stringToTaxpayerStatus(value: string): TaxpayerStatus {
-  if (!taxPayerStatuses.includes(value as TaxpayerStatus)) {
+  if (!taxpayerStatuses.includes(value as TaxpayerStatus)) {
     throw new Error(`Unknown TaxpayerStatus ${value}`)
   }
   return value as TaxpayerStatus

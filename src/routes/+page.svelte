@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { calculateTax, type TaxpayerStatus } from "$lib/tax";
+  import {
+    calculateTax,
+    taxpayerStatuses,
+    type TaxpayerStatus,
+  } from "$lib/tax";
 
   function formatIdr(n: number | null): string {
     if (n === null) {
@@ -42,14 +46,9 @@
 />
 <label for="status">Status PTKP</label>
 <select id="status" bind:value={status}>
-  <option value="TK/0">Tidak Kawin | 0 Tanggungan</option>
-  <option value="TK/1">Tidak Kawin | 1 Tanggungan</option>
-  <option value="TK/2">Tidak Kawin | 2 Tanggungan</option>
-  <option value="TK/2">Tidak Kawin | 3 Tanggungan</option>
-  <option value="K/0">Kawin | 0 Tanggungan</option>
-  <option value="K/1">Kawin | 1 Tanggungan</option>
-  <option value="K/2">Kawin | 2 Tanggungan</option>
-  <option value="K/3">Kawin | 3 Tanggungan</option>
+  {#each taxpayerStatuses as taxpayerStatus}
+    <option value={taxpayerStatus}>{taxpayerStatus}</option>
+  {/each}
 </select>
 <table>
   <thead>
