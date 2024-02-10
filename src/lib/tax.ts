@@ -23,8 +23,8 @@ export function calculateTax(salary: number, bonus: number, status: TaxpayerStat
 
   const employerInsuranceContribution = calculateEmployerInsuranceContribution(salary)
   const employeeInsuranceContribution = calculateEmployeeInsuranceContribution(salary)
-  const employeeDeduction = Object.values(employeeInsuranceContribution).reduce((accumulator, value) => accumulator + value)
   const employerAddition = Object.values(employerInsuranceContribution).reduce((accumulator, value) => accumulator + value)
+  const employeeDeduction = Object.values(employeeInsuranceContribution).reduce((accumulator, value) => accumulator + value)
 
   const grossMonthlyIncome = salary + employerAddition
   const occupationalExpense = Math.min(grossMonthlyIncome * 0.05, 500_000)
