@@ -51,7 +51,7 @@
   <option value="K/2">Kawin | 2 Tanggungan</option>
   <option value="K/3">Kawin | 3 Tanggungan</option>
 </select>
-<table border="1">
+<table>
   <thead>
     <tr>
       <th>Komponen</th>
