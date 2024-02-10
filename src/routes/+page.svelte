@@ -14,9 +14,9 @@
 
   let salary = 0;
   let bonus = 0;
-  let status = "TK/0";
+  let status: TaxpayerStatus = "TK/0";
 
-  $: result = calculateTax(salary, bonus, status as TaxpayerStatus);
+  $: result = calculateTax(salary, bonus, status);
 </script>
 
 <svelte:head>

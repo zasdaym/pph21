@@ -1,4 +1,4 @@
-export type CalculateTaxResult = {
+type CalculateTaxResult = {
   taxRateCategory: TaxRateCategory
   employerInsuranceContribution: EmployerInsuranceContribution
   employeeInsuranceContribution: EmployeeInsuranceContribution
@@ -15,13 +15,6 @@ export type CalculateTaxResult = {
 
 export const taxpayerStatuses = ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3"] as const
 export type TaxpayerStatus = (typeof taxpayerStatuses)[number];
-
-export function stringToTaxpayerStatus(value: string): TaxpayerStatus {
-  if (!taxpayerStatuses.includes(value as TaxpayerStatus)) {
-    throw new Error(`Unknown TaxpayerStatus ${value}`)
-  }
-  return value as TaxpayerStatus
-}
 
 // Calculate PPh21 based on PP 58/2023. Only covers January-December simulation.
 export function calculateTax(salary: number, bonus: number, status: TaxpayerStatus): CalculateTaxResult {
