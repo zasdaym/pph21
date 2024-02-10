@@ -35,6 +35,7 @@
   bind:value={salary}
   min="0"
   placeholder="10000000"
+  data-umami-event="salary-input"
 />
 <label for="bonus">Bonus tahunan (THR, Jasa produksi, dll)</label>
 <input
@@ -43,6 +44,7 @@
   bind:value={bonus}
   min="0"
   placeholder="10000000"
+  data-umami-event="bonus-input"
 />
 <label for="status">Status PTKP</label>
 <select id="status" bind:value={status}>
