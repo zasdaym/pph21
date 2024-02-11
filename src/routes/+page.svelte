@@ -88,7 +88,7 @@
     <td>- {formatIdr(result.employeeInsuranceContribution.jp)}</td>
   </tr>
   <tr>
-    <td>Biaya Jabatan</td>
+    <td>Biaya Jabatan (5%, maks. Rp.500.000)</td>
     <td>- {formatIdr(result.occupationalExpense)}</td>
   </tr>
   <tr>
