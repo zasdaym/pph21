@@ -20,7 +20,10 @@
   let bonus = 0;
   let status: TaxpayerStatus = "TK/0";
 
-  $: result = calculateTax(salary, bonus, status);
+  let result = calculateTax(salary, bonus, status);
+  function onClick() {
+    result = calculateTax(salary, bonus, status);
+  }
 </script>
 
 <svelte:head>
@@ -39,7 +42,6 @@
   bind:value={salary}
   min="0"
   placeholder="10000000"
-  data-umami-event="salary-input"
 />
 <label for="bonus">Bonus tahunan (THR, Jasa produksi, dll)</label>
 <input
@@ -48,7 +50,6 @@
   bind:value={bonus}
   min="0"
   placeholder="10000000"
-  data-umami-event="bonus-input"
 />
 <label for="status">Status PTKP</label>
 <select id="status" bind:value={status}>
@@ -56,6 +57,15 @@
     <option value={taxpayerStatus}>{taxpayerStatus}</option>
   {/each}
 </select>
+<button
+  data-umami-event="calculate-salary"
+  data-umami-event-salary={salary}
+  data-umami-event-bonus={bonus}
+  data-umami-event-status={status}
+  on:click={onClick}
+>
+  Hitung
+</button>
 <table>
   <thead>
     <tr>
