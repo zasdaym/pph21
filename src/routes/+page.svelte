@@ -9,7 +9,11 @@
     if (n === null) {
       n = 0;
     }
-    return n.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+    return n.toLocaleString("id-ID", {
+      currency: "IDR",
+      maximumFractionDigits: 0,
+      style: "currency",
+    });
   }
 
   let salary = 0;
