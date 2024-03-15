@@ -1,0 +1,49 @@
+@use "@picocss/pico/scss/pico" with (
+    $enable-responsive-typography: false,
+    $enable-semantic-container: true,
+    $semantic-root-element: "#root",
+    $modules: (
+        "themes/default": true,
+
+        "layout/document": true,
+        "layout/landmarks": true,
+        "layout/container": true,
+        "layout/section": true,
+        "layout/grid": false,
+        "layout/overflow-auto": false,
+
+        "content/link": false,
+        "content/typography": false,
+        "content/embedded": false,
+        "content/button": true,
+        "content/table": true,
+        "content/code": false,
+        "content/figure": false,
+        "content/miscs": false,
+
+        "forms/basics": true,
+        "forms/checkbox-radio-switch": false,
+        "forms/input-color": false,
+        "forms/input-date": false,
+        "forms/input-file": false,
+        "forms/input-range": false,
+        "forms/input-search": false,
+
+        "components/accordion": false,
+        "components/card": false,
+        "components/dropdown": false,
+        "components/group": false,
+        "components/loading": false,
+        "components/modal": false,
+        "components/nav": false,
+        "components/progress": false,
+        "components/tooltip": false,
+
+        "utilities/accessibility": false,
+        "utilities/reduce-motion": false
+    )
+);
+
+:root {
+    --pico-form-element-spacing-vertical: 0.5rem;
+}
