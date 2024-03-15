@@ -66,7 +66,9 @@ export function calculateTax(
   const yearlyGrossIncome = monthlyGrossIncome * 12 + bonus;
   const occupationalExpense = Math.min(monthlyGrossIncome * 0.05, 500_000);
   const yearlyNetIncome =
-    yearlyGrossIncome - employeeContributionSum * 12 - occupationalExpense * 12;
+    yearlyGrossIncome -
+    (employeeContribution.jht + employeeContribution.jp) * 12 -
+    occupationalExpense * 12;
   const nonTaxableIncome = getNonTaxableIncomeByTaxpayerStatus(status);
   const taxableIncome = Math.max(yearlyNetIncome - nonTaxableIncome, 0);
   const decemberMonthTax =
@@ -117,15 +119,18 @@ function calculateEmployerContribution(salary: number): EmployerContribution {
 type EmployeeContribution = {
   jht: number;
   jp: number;
+  bpjskes: number;
 };
 
 function calculateEmployeeContribution(salary: number): EmployeeContribution {
   const jht = salary * 0.02;
   const jp = Math.min(salary, maxJpSubscription) * 0.01;
+  const bpjskes = Math.min(salary, maxBpjskesSubscription) * 0.01;
 
   return {
     jht,
     jp,
+    bpjskes,
   };
 }
 
