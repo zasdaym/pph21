@@ -62,6 +62,7 @@
             {/each}
         </select>
         <button
+            class="contrast"
             data-umami-event="calculate-salary"
             data-umami-event-salary={salary}
             data-umami-event-bonus={bonus}
