@@ -75,6 +75,22 @@
                     </div>
                     <div class="field">
                         <div class="control">
+                            <div class="select">
+                                <select id="status" bind:value={status}>
+                                    <option value="TK/0">TK/0</option>
+                                    <option value="TK/1">TK/1</option>
+                                    <option value="TK/2">TK/2</option>
+                                    <option value="TK/3">TK/3</option>
+                                    <option value="K/0">K/0</option>
+                                    <option value="K/1">K/1</option>
+                                    <option value="K/2">K/2</option>
+                                    <option value="K/3">K/3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
                             <button class="button" on:click={onClick}
                                 >Hitung</button
                             >
