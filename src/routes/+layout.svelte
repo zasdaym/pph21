@@ -1,5 +1,4 @@
 <script lang="ts">
-    import "../app.scss";
     import { dev } from "$app/environment";
     import {
         PUBLIC_ANALYTICS_ID,
@@ -8,6 +7,10 @@
 </script>
 
 <svelte:head>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+    />
     {#if !dev}
         <script
             async
