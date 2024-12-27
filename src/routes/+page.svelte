@@ -151,7 +151,7 @@
                 <td>{formatIdr(result.bonusMonthTakeHomePay)}</td>
             </tr>
             <tr>
-                <td>Take Home Pay di Bulan December</td>
+                <td>Take Home Pay di Bulan Desember</td>
                 <td>{formatIdr(result.decemberTakeHomePay)}</td>
             </tr>
         </table>
