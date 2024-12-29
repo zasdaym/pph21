@@ -52,8 +52,6 @@ export function calculateTax(
   const bonusMonthIncome = monthlyGrossIncome + bonus;
   const bonusMonthTaxRate = getTaxRate(taxRateCategory, bonusMonthIncome);
   const bonusMonthTax = bonusMonthIncome * bonusMonthTaxRate;
-  const bonusMonthTakeHomePay =
-    salary + bonus - bonusMonthTax - employeeContributionSum;
 
   const yearlyGrossIncome = monthlyGrossIncome * 11 + bonusMonthIncome;
   const occupationalExpense = Math.min(monthlyGrossIncome * 0.05, 500_000);
