@@ -179,10 +179,6 @@
                             <td>{formatIdr(result.regularMonthTax)}</td>
                         </tr>
                         <tr>
-                            <td>Pajak di Bulan Bonus</td>
-                            <td>{formatIdr(result.bonusMonthTax)}</td>
-                        </tr>
-                        <tr>
                             <td>Pajak di Bulan Desember</td>
                             <td>{formatIdr(result.decemberMonthTax)}</td>
                         </tr>
@@ -193,10 +189,6 @@
                         <tr>
                             <td>Take Home Pay Bulanan</td>
                             <td>{formatIdr(result.regularMonthTakeHomePay)}</td>
-                        </tr>
-                        <tr>
-                            <td>Take Home Pay di Bulan bonus</td>
-                            <td>{formatIdr(result.bonusMonthTakeHomePay)}</td>
                         </tr>
                         <tr>
                             <td>Take Home Pay di Bulan Desember</td>

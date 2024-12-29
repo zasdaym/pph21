@@ -9,11 +9,9 @@ type CalculateTaxResult = {
   nonTaxableIncome: number;
   taxableIncome: number;
   regularMonthTax: number;
-  bonusMonthTax: number;
   decemberMonthTax: number;
   totalTax: number;
   regularMonthTakeHomePay: number;
-  bonusMonthTakeHomePay: number;
   decemberTakeHomePay: number;
 };
 
@@ -87,11 +85,9 @@ export function calculateTax(
     nonTaxableIncome,
     taxableIncome,
     regularMonthTax,
-    bonusMonthTax,
     decemberMonthTax,
     totalTax,
     regularMonthTakeHomePay,
-    bonusMonthTakeHomePay,
     decemberTakeHomePay,
   };
 }
