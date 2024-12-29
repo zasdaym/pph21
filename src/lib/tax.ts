@@ -137,7 +137,7 @@ function calculateEmployeeContribution(salary: number): EmployeeContribution {
 
 // Calculate PPh21 based on UU 7/2021 given a TAXABLE INCOME, WHICH MEANS IT'S ALREADY DEDUCTED BY PTKP.
 function calculateYearlyTax(taxableIncome: number): number {
-  const taxBrackets = [
+  const brackets = [
     { limit: 60_000_000, rate: 0.05 },
     { limit: 250_000_000, rate: 0.15 },
     { limit: 500_000_000, rate: 0.25 },
@@ -145,16 +145,15 @@ function calculateYearlyTax(taxableIncome: number): number {
     { limit: Number.POSITIVE_INFINITY, rate: 0.35 },
   ];
 
-  let remaining = taxableIncome;
+  let processed = 0;
   let result = 0;
-  for (const { limit, rate } of taxBrackets) {
-    if (remaining <= 0) {
-      break;
-    }
-    const currentBracketAmount = Math.min(remaining, limit);
-    const currentBracketTax = currentBracketAmount * rate;
-    result += currentBracketTax;
-    remaining -= currentBracketAmount;
+
+  for (const { limit, rate } of brackets) {
+    const current = Math.min(taxableIncome, limit) - processed;
+    processed += current;
+
+    const tax = current * rate;
+    result += tax;
   }
 
   return result;
