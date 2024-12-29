@@ -31,9 +31,6 @@ export function calculateTax(
   bonus: number,
   status: TaxpayerStatus,
 ): CalculateTaxResult {
-  const taxRateCategory = getTaxRateCategoryByStatus(status);
-  const taxRates = getTaxRatesByCategory(taxRateCategory);
-
   const employerContribution = calculateEmployerContribution(salary);
   const employerContributionSum = Object.values(employerContribution).reduce(
     (accumulator, value) => accumulator + value,
@@ -44,19 +41,17 @@ export function calculateTax(
     (accumulator, value) => accumulator + value,
   );
 
+  const taxRateCategory = getTaxRateCategory(status);
+
   const monthlyGrossIncome = salary + employerContributionSum;
-  const regularMonthTaxRate =
-    taxRates.find((taxRate) => taxRate.minAmount <= monthlyGrossIncome) ??
-    taxRates[taxRates.length - 1];
-  const regularMonthTax = monthlyGrossIncome * regularMonthTaxRate.rate;
+  const regularMonthTaxRate = getTaxRate(taxRateCategory, monthlyGrossIncome);
+  const regularMonthTax = monthlyGrossIncome * regularMonthTaxRate;
   const regularMonthTakeHomePay =
     salary - regularMonthTax - employeeContributionSum;
 
   const bonusMonthIncome = monthlyGrossIncome + bonus;
-  const bonusMonthTaxRate =
-    taxRates.find((taxRate) => taxRate.minAmount <= bonusMonthIncome) ??
-    taxRates[taxRates.length - 1];
-  const bonusMonthTax = bonusMonthIncome * bonusMonthTaxRate.rate;
+  const bonusMonthTaxRate = getTaxRate(taxRateCategory, bonusMonthIncome);
+  const bonusMonthTax = bonusMonthIncome * bonusMonthTaxRate;
   const bonusMonthTakeHomePay =
     salary + bonus - bonusMonthTax - employeeContributionSum;
 
@@ -178,7 +173,7 @@ function getNonTaxableIncomeByStatus(status: TaxpayerStatus): number {
 
 type TaxRateCategory = "A" | "B" | "C";
 
-function getTaxRateCategoryByStatus(status: TaxpayerStatus): TaxRateCategory {
+function getTaxRateCategory(status: TaxpayerStatus): TaxRateCategory {
   switch (status) {
     case "TK/0":
     case "TK/1":
@@ -194,146 +189,140 @@ function getTaxRateCategoryByStatus(status: TaxpayerStatus): TaxRateCategory {
   }
 }
 
-interface TaxRate {
-  minAmount: number;
-  rate: number;
-}
-
-function getTaxRatesByCategory(category: TaxRateCategory): TaxRate[] {
+function getTaxRate(category: TaxRateCategory, income: number): number {
   switch (category) {
-    case "A":
-      return [
-        { minAmount: 1_400_000_001, rate: 34 },
-        { minAmount: 910_000_001, rate: 0.33 },
-        { minAmount: 695_000_001, rate: 0.32 },
-        { minAmount: 550_000_001, rate: 0.31 },
-        { minAmount: 454_000_001, rate: 0.3 },
-        { minAmount: 337_000_001, rate: 0.29 },
-        { minAmount: 206_000_001, rate: 0.28 },
-        { minAmount: 157_000_001, rate: 0.27 },
-        { minAmount: 125_000_001, rate: 0.26 },
-        { minAmount: 103_000_001, rate: 0.25 },
-        { minAmount: 89_000_001, rate: 0.24 },
-        { minAmount: 77_500_001, rate: 0.23 },
-        { minAmount: 68_600_001, rate: 0.22 },
-        { minAmount: 62_200_001, rate: 0.21 },
-        { minAmount: 56_300_001, rate: 0.2 },
-        { minAmount: 51_400_001, rate: 0.19 },
-        { minAmount: 47_800_001, rate: 0.18 },
-        { minAmount: 43_850_001, rate: 0.17 },
-        { minAmount: 39_100_001, rate: 0.16 },
-        { minAmount: 35_400_001, rate: 0.15 },
-        { minAmount: 32_400_001, rate: 0.14 },
-        { minAmount: 30_050_001, rate: 0.13 },
-        { minAmount: 28_000_001, rate: 0.12 },
-        { minAmount: 26_450_001, rate: 0.11 },
-        { minAmount: 24_150_001, rate: 0.1 },
-        { minAmount: 19_750_001, rate: 0.09 },
-        { minAmount: 16_950_001, rate: 0.08 },
-        { minAmount: 15_100_001, rate: 0.07 },
-        { minAmount: 13_750_001, rate: 0.06 },
-        { minAmount: 12_500_001, rate: 0.05 },
-        { minAmount: 11_600_001, rate: 0.04 },
-        { minAmount: 11_050_001, rate: 0.035 },
-        { minAmount: 10_700_001, rate: 0.03 },
-        { minAmount: 10_350_001, rate: 0.025 },
-        { minAmount: 10_050_001, rate: 0.0225 },
-        { minAmount: 9_650_001, rate: 0.02 },
-        { minAmount: 8_550_001, rate: 0.0175 },
-        { minAmount: 7_500_001, rate: 0.015 },
-        { minAmount: 6_750_001, rate: 0.0125 },
-        { minAmount: 6_300_001, rate: 0.01 },
-        { minAmount: 5_950_001, rate: 0.0075 },
-        { minAmount: 5_650_001, rate: 0.005 },
-        { minAmount: 5_400_001, rate: 0.0025 },
-        { minAmount: 0, rate: 0 },
-      ];
-    case "B":
-      return [
-        { minAmount: 1_405_000_001, rate: 0.34 },
-        { minAmount: 957_000_001, rate: 0.33 },
-        { minAmount: 704_000_001, rate: 0.32 },
-        { minAmount: 555_000_001, rate: 0.31 },
-        { minAmount: 459_000_001, rate: 0.3 },
-        { minAmount: 374_000_001, rate: 0.29 },
-        { minAmount: 211_000_001, rate: 0.28 },
-        { minAmount: 163_000_001, rate: 0.27 },
-        { minAmount: 129_000_001, rate: 0.26 },
-        { minAmount: 109_000_001, rate: 0.25 },
-        { minAmount: 93_000_001, rate: 0.24 },
-        { minAmount: 80_000_001, rate: 0.23 },
-        { minAmount: 71_000_001, rate: 0.22 },
-        { minAmount: 64_000_001, rate: 0.21 },
-        { minAmount: 58_500_001, rate: 0.21 },
-        { minAmount: 53_800_001, rate: 0.19 },
-        { minAmount: 49_500_001, rate: 0.18 },
-        { minAmount: 45_800_001, rate: 0.17 },
-        { minAmount: 41_100_001, rate: 0.16 },
-        { minAmount: 37_100_001, rate: 0.15 },
-        { minAmount: 33_950_001, rate: 0.14 },
-        { minAmount: 31_450_001, rate: 0.13 },
-        { minAmount: 29_350_001, rate: 0.12 },
-        { minAmount: 27_700_001, rate: 0.11 },
-        { minAmount: 26_000_001, rate: 0.1 },
-        { minAmount: 21_850_001, rate: 0.09 },
-        { minAmount: 18_450_001, rate: 0.08 },
-        { minAmount: 16_400_001, rate: 0.07 },
-        { minAmount: 14_950_001, rate: 0.06 },
-        { minAmount: 13_600_001, rate: 0.05 },
-        { minAmount: 12_600_001, rate: 0.04 },
-        { minAmount: 11_600_001, rate: 0.03 },
-        { minAmount: 11_250_001, rate: 0.025 },
-        { minAmount: 10_750_001, rate: 0.02 },
-        { minAmount: 9_200_001, rate: 0.015 },
-        { minAmount: 7_300_001, rate: 0.01 },
-        { minAmount: 6_850_001, rate: 0.0075 },
-        { minAmount: 6_500_001, rate: 0.005 },
-        { minAmount: 6_200_001, rate: 0.0025 },
-        { minAmount: 0, rate: 0 },
-      ];
-    case "C":
-      return [
-        { minAmount: 1_419_000_001, rate: 0.34 },
-        { minAmount: 965_000_001, rate: 0.33 },
-        { minAmount: 709_000_001, rate: 0.32 },
-        { minAmount: 561_000_001, rate: 0.31 },
-        { minAmount: 463_000_001, rate: 0.3 },
-        { minAmount: 390_000_001, rate: 0.29 },
-        { minAmount: 221_000_001, rate: 0.28 },
-        { minAmount: 169_000_001, rate: 0.27 },
-        { minAmount: 134_000_001, rate: 0.26 },
-        { minAmount: 110_000_001, rate: 0.25 },
-        { minAmount: 95_600_001, rate: 0.24 },
-        { minAmount: 83_200_001, rate: 0.23 },
-        { minAmount: 74_500_001, rate: 0.22 },
-        { minAmount: 66_700_001, rate: 0.21 },
-        { minAmount: 60_400_001, rate: 0.2 },
-        { minAmount: 55_800_001, rate: 0.19 },
-        { minAmount: 51_200_001, rate: 0.18 },
-        { minAmount: 47_400_001, rate: 0.17 },
-        { minAmount: 43_000_001, rate: 0.16 },
-        { minAmount: 38_900_001, rate: 0.15 },
-        { minAmount: 35_400_001, rate: 0.14 },
-        { minAmount: 32_600_001, rate: 0.13 },
-        { minAmount: 30_100_001, rate: 0.12 },
-        { minAmount: 28_100_001, rate: 0.11 },
-        { minAmount: 26_600_001, rate: 0.1 },
-        { minAmount: 22_700_001, rate: 0.09 },
-        { minAmount: 19_500_001, rate: 0.08 },
-        { minAmount: 17_050_001, rate: 0.07 },
-        { minAmount: 15_550_001, rate: 0.06 },
-        { minAmount: 14_150_001, rate: 0.05 },
-        { minAmount: 12_950_001, rate: 0.04 },
-        { minAmount: 12_050_001, rate: 0.03 },
-        { minAmount: 11_200_001, rate: 0.02 },
-        { minAmount: 10_950_001, rate: 0.0175 },
-        { minAmount: 9_800_001, rate: 0.015 },
-        { minAmount: 8_850_001, rate: 0.0125 },
-        { minAmount: 7_800_001, rate: 0.01 },
-        { minAmount: 7_350_001, rate: 0.0075 },
-        { minAmount: 6_950_001, rate: 0.005 },
-        { minAmount: 6_600_001, rate: 0.0025 },
-        { minAmount: 0, rate: 0 },
-      ];
+    case "A": {
+      if (income >= 1_400_000_001) return 34;
+      if (income >= 910_000_001) return 0.33;
+      if (income >= 695_000_001) return 0.32;
+      if (income >= 550_000_001) return 0.31;
+      if (income >= 454_000_001) return 0.3;
+      if (income >= 337_000_001) return 0.29;
+      if (income >= 206_000_001) return 0.28;
+      if (income >= 157_000_001) return 0.27;
+      if (income >= 125_000_001) return 0.26;
+      if (income >= 103_000_001) return 0.25;
+      if (income >= 89_000_001) return 0.24;
+      if (income >= 77_500_001) return 0.23;
+      if (income >= 68_600_001) return 0.22;
+      if (income >= 62_200_001) return 0.21;
+      if (income >= 56_300_001) return 0.2;
+      if (income >= 51_400_001) return 0.19;
+      if (income >= 47_800_001) return 0.18;
+      if (income >= 43_850_001) return 0.17;
+      if (income >= 39_100_001) return 0.16;
+      if (income >= 35_400_001) return 0.15;
+      if (income >= 32_400_001) return 0.14;
+      if (income >= 30_050_001) return 0.13;
+      if (income >= 28_000_001) return 0.12;
+      if (income >= 26_450_001) return 0.11;
+      if (income >= 24_150_001) return 0.1;
+      if (income >= 19_750_001) return 0.09;
+      if (income >= 16_950_001) return 0.08;
+      if (income >= 15_100_001) return 0.07;
+      if (income >= 13_750_001) return 0.06;
+      if (income >= 12_500_001) return 0.05;
+      if (income >= 11_600_001) return 0.04;
+      if (income >= 11_050_001) return 0.035;
+      if (income >= 10_700_001) return 0.03;
+      if (income >= 10_350_001) return 0.025;
+      if (income >= 10_050_001) return 0.0225;
+      if (income >= 9_650_001) return 0.02;
+      if (income >= 8_550_001) return 0.0175;
+      if (income >= 7_500_001) return 0.015;
+      if (income >= 6_750_001) return 0.0125;
+      if (income >= 6_300_001) return 0.01;
+      if (income >= 5_950_001) return 0.0075;
+      if (income >= 5_650_001) return 0.005;
+      if (income >= 5_400_001) return 0.0025;
+      return 0;
+    }
+    case "B": {
+      if (income >= 1_405_000_001) return 0.34;
+      if (income >= 957_000_001) return 0.33;
+      if (income >= 704_000_001) return 0.32;
+      if (income >= 555_000_001) return 0.31;
+      if (income >= 459_000_001) return 0.3;
+      if (income >= 374_000_001) return 0.29;
+      if (income >= 211_000_001) return 0.28;
+      if (income >= 163_000_001) return 0.27;
+      if (income >= 129_000_001) return 0.26;
+      if (income >= 109_000_001) return 0.25;
+      if (income >= 93_000_001) return 0.24;
+      if (income >= 80_000_001) return 0.23;
+      if (income >= 71_000_001) return 0.22;
+      if (income >= 64_000_001) return 0.21;
+      if (income >= 58_500_001) return 0.21;
+      if (income >= 53_800_001) return 0.19;
+      if (income >= 49_500_001) return 0.18;
+      if (income >= 45_800_001) return 0.17;
+      if (income >= 41_100_001) return 0.16;
+      if (income >= 37_100_001) return 0.15;
+      if (income >= 33_950_001) return 0.14;
+      if (income >= 31_450_001) return 0.13;
+      if (income >= 29_350_001) return 0.12;
+      if (income >= 27_700_001) return 0.11;
+      if (income >= 26_000_001) return 0.1;
+      if (income >= 21_850_001) return 0.09;
+      if (income >= 18_450_001) return 0.08;
+      if (income >= 16_400_001) return 0.07;
+      if (income >= 14_950_001) return 0.06;
+      if (income >= 13_600_001) return 0.05;
+      if (income >= 12_600_001) return 0.04;
+      if (income >= 11_600_001) return 0.03;
+      if (income >= 11_250_001) return 0.025;
+      if (income >= 10_750_001) return 0.02;
+      if (income >= 9_200_001) return 0.015;
+      if (income >= 7_300_001) return 0.01;
+      if (income >= 6_850_001) return 0.0075;
+      if (income >= 6_500_001) return 0.005;
+      if (income >= 6_200_001) return 0.0025;
+      return 0;
+    }
+    case "C": {
+      if (income >= 1_419_000_001) return 0.34;
+      if (income >= 965_000_001) return 0.33;
+      if (income >= 709_000_001) return 0.32;
+      if (income >= 561_000_001) return 0.31;
+      if (income >= 463_000_001) return 0.3;
+      if (income >= 390_000_001) return 0.29;
+      if (income >= 221_000_001) return 0.28;
+      if (income >= 169_000_001) return 0.27;
+      if (income >= 134_000_001) return 0.26;
+      if (income >= 110_000_001) return 0.25;
+      if (income >= 95_600_001) return 0.24;
+      if (income >= 83_200_001) return 0.23;
+      if (income >= 74_500_001) return 0.22;
+      if (income >= 66_700_001) return 0.21;
+      if (income >= 60_400_001) return 0.2;
+      if (income >= 55_800_001) return 0.19;
+      if (income >= 51_200_001) return 0.18;
+      if (income >= 47_400_001) return 0.17;
+      if (income >= 43_000_001) return 0.16;
+      if (income >= 38_900_001) return 0.15;
+      if (income >= 35_400_001) return 0.14;
+      if (income >= 32_600_001) return 0.13;
+      if (income >= 30_100_001) return 0.12;
+      if (income >= 28_100_001) return 0.11;
+      if (income >= 26_600_001) return 0.1;
+      if (income >= 22_700_001) return 0.09;
+      if (income >= 19_500_001) return 0.08;
+      if (income >= 17_050_001) return 0.07;
+      if (income >= 15_550_001) return 0.06;
+      if (income >= 14_150_001) return 0.05;
+      if (income >= 12_950_001) return 0.04;
+      if (income >= 12_050_001) return 0.03;
+      if (income >= 11_200_001) return 0.02;
+      if (income >= 10_950_001) return 0.0175;
+      if (income >= 9_800_001) return 0.015;
+      if (income >= 8_850_001) return 0.0125;
+      if (income >= 7_800_001) return 0.01;
+      if (income >= 7_350_001) return 0.0075;
+      if (income >= 6_950_001) return 0.005;
+      if (income >= 6_600_001) return 0.0025;
+      return 0;
+    }
+    default:
+      return 0;
   }
 }
