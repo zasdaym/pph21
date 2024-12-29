@@ -322,7 +322,5 @@ function getTaxRate(category: TaxRateCategory, income: number): number {
       if (income >= 6_600_001) return 0.0025;
       return 0;
     }
-    default:
-      return 0;
   }
 }
