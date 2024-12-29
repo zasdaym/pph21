@@ -31,7 +31,7 @@ export function calculateTax(
   bonus: number,
   status: TaxpayerStatus,
 ): CalculateTaxResult {
-  const taxRateCategory = getTaxRateCategoryByTaxpayerStatus(status);
+  const taxRateCategory = getTaxRateCategoryByStatus(status);
   const taxRates = getTaxRatesByCategory(taxRateCategory);
 
   const employerContribution = calculateEmployerContribution(salary);
@@ -67,7 +67,7 @@ export function calculateTax(
     (employeeContribution.jht + employeeContribution.jp) * 12 -
     occupationalExpense * 12;
 
-  const nonTaxableIncome = getNonTaxableIncomeByTaxpayerStatus(status);
+  const nonTaxableIncome = getNonTaxableIncomeByStatus(status);
   const taxableIncome = Math.max(yearlyNetIncome - nonTaxableIncome, 0);
 
   const totalTax = calculateYearlyTax(taxableIncome);
@@ -155,7 +155,7 @@ function calculateYearlyTax(taxableIncome: number): number {
   return result;
 }
 
-function getNonTaxableIncomeByTaxpayerStatus(status: TaxpayerStatus): number {
+function getNonTaxableIncomeByStatus(status: TaxpayerStatus): number {
   switch (status) {
     case "TK/0":
       return 54_000_000;
@@ -178,9 +178,7 @@ function getNonTaxableIncomeByTaxpayerStatus(status: TaxpayerStatus): number {
 
 type TaxRateCategory = "A" | "B" | "C";
 
-function getTaxRateCategoryByTaxpayerStatus(
-  status: TaxpayerStatus,
-): TaxRateCategory {
+function getTaxRateCategoryByStatus(status: TaxpayerStatus): TaxRateCategory {
   switch (status) {
     case "TK/0":
     case "TK/1":
