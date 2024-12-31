@@ -1,4 +1,4 @@
-type CalculateTaxResult = {
+interface CalculateTaxResult {
   taxRateCategory: TaxRateCategory;
   employerContribution: EmployerContribution;
   employeeContribution: EmployeeContribution;
@@ -13,7 +13,7 @@ type CalculateTaxResult = {
   totalTax: number;
   regularMonthTakeHomePay: number;
   decemberTakeHomePay: number;
-};
+}
 
 export type TaxpayerStatus =
   | "TK/0"
@@ -106,11 +106,11 @@ function calculateEmployerContribution(salary: number): EmployerContribution {
   };
 }
 
-type EmployeeContribution = {
+interface EmployeeContribution {
   jht: number;
   jp: number;
   bpjskes: number;
-};
+}
 
 function calculateEmployeeContribution(salary: number): EmployeeContribution {
   const jht = salary * 0.02;
