@@ -82,7 +82,7 @@ export default function App() {
     <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-6 sm:px-6">
       <Card className="panel-card">
         <CardContent className="space-y-4 p-4">
-          <h1 className="text-lg font-medium">Kalkulator PPH 21</h1>
+          <h1 className="text-lg font-medium">Kalkulator PPh 21</h1>
 
           <div className="grid gap-4 md:grid-cols-2">
             <Select value={status} onValueChange={(value) => setStatus(value as TaxpayerStatus)}>
