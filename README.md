@@ -1,3 +1,3 @@
 # pph21
 
-Tax is complicated, no?
+Monthly-only PPh 21 calculator built with React, shadcn/ui, Lyra, and Vite+.
