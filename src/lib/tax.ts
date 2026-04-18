@@ -163,21 +163,24 @@ const taxBrackets: Record<TaxRateCategory, Array<[threshold: number, rate: numbe
 };
 
 export function calculateMonthlyTax(grossSalary: number, status: TaxpayerStatus): MonthlyTaxResult {
+  const sanitizedGrossSalary = sanitizeGrossSalary(grossSalary);
   const category = getTaxRateCategory(status);
-  const employerContribution = calculateEmployerContribution(grossSalary);
-  const employeeContribution = calculateEmployeeContribution(grossSalary);
+  const employerContribution = calculateEmployerContribution(sanitizedGrossSalary);
+  const employeeContribution = calculateEmployeeContribution(sanitizedGrossSalary);
 
   const employerContributionTotal = sumValues(Object.values(employerContribution));
   const employeeContributionTotal = sumValues(Object.values(employeeContribution));
-  const taxableMonthlyIncome = grossSalary + employerContributionTotal;
+  const taxableMonthlyIncome = roundMoney(sanitizedGrossSalary + employerContributionTotal);
   const taxRate = getTaxRate(category, taxableMonthlyIncome);
-  const monthlyTax = taxableMonthlyIncome * taxRate;
-  const monthlyTakeHomePay = grossSalary - monthlyTax - employeeContributionTotal;
+  const monthlyTax = roundMoney(taxableMonthlyIncome * taxRate);
+  const monthlyTakeHomePay = roundMoney(
+    sanitizedGrossSalary - monthlyTax - employeeContributionTotal,
+  );
 
   return {
     status,
     category,
-    grossSalary,
+    grossSalary: sanitizedGrossSalary,
     employerContribution,
     employeeContribution,
     employerContributionTotal,
@@ -187,6 +190,10 @@ export function calculateMonthlyTax(grossSalary: number, status: TaxpayerStatus)
     monthlyTax,
     monthlyTakeHomePay,
   };
+}
+
+function sanitizeGrossSalary(grossSalary: number): number {
+  return Number.isFinite(grossSalary) ? Math.max(grossSalary, 0) : 0;
 }
 
 function getTaxRateCategory(status: TaxpayerStatus): TaxRateCategory {
@@ -207,17 +214,17 @@ function getTaxRateCategory(status: TaxpayerStatus): TaxRateCategory {
 
 function calculateEmployerContribution(salary: number): EmployerContribution {
   return {
-    jkk: salary * 0.0024,
-    jkm: salary * 0.003,
-    bpjskes: Math.min(salary, maxBpjskesSubscription) * 0.04,
+    jkk: roundMoney(salary * 0.0024),
+    jkm: roundMoney(salary * 0.003),
+    bpjskes: roundMoney(Math.min(salary, maxBpjskesSubscription) * 0.04),
   };
 }
 
 function calculateEmployeeContribution(salary: number): EmployeeContribution {
   return {
-    jht: salary * 0.02,
-    jp: Math.min(salary, maxJpSubscription) * 0.01,
-    bpjskes: Math.min(salary, maxBpjskesSubscription) * 0.01,
+    jht: roundMoney(salary * 0.02),
+    jp: roundMoney(Math.min(salary, maxJpSubscription) * 0.01),
+    bpjskes: roundMoney(Math.min(salary, maxBpjskesSubscription) * 0.01),
   };
 }
 
@@ -233,4 +240,8 @@ function getTaxRate(category: TaxRateCategory, income: number): number {
 
 function sumValues(values: number[]): number {
   return values.reduce((total, value) => total + value, 0);
+}
+
+function roundMoney(value: number): number {
+  return Math.round(value);
 }
