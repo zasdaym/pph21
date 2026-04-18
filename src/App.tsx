@@ -38,7 +38,7 @@ export default function App() {
   const grossSalary = Math.max(Number(salaryInput) || 0, 0);
   const result = calculateMonthlyTax(grossSalary, status);
 
-  const rows: Array<{ label: string; value: string }> = [
+  const rows: Array<{ label: string; value: string; negative?: boolean }> = [
     { label: "Status PTKP", value: result.status },
     { label: "Kategori TER", value: result.category },
     { label: "Gaji gross bulanan", value: formatCurrency(result.grossSalary) },
@@ -48,11 +48,20 @@ export default function App() {
       label: "BPJS kesehatan perusahaan",
       value: formatCurrency(result.employerContribution.bpjskes),
     },
-    { label: "JHT karyawan", value: `- ${formatCurrency(result.employeeContribution.jht)}` },
-    { label: "JP karyawan", value: `- ${formatCurrency(result.employeeContribution.jp)}` },
+    {
+      label: "JHT karyawan",
+      value: formatCurrency(result.employeeContribution.jht),
+      negative: true,
+    },
+    {
+      label: "JP karyawan",
+      value: formatCurrency(result.employeeContribution.jp),
+      negative: true,
+    },
     {
       label: "BPJS kesehatan karyawan",
-      value: `- ${formatCurrency(result.employeeContribution.bpjskes)}`,
+      value: formatCurrency(result.employeeContribution.bpjskes),
+      negative: true,
     },
     {
       label: "Total kontribusi perusahaan",
@@ -60,7 +69,8 @@ export default function App() {
     },
     {
       label: "Total potongan karyawan",
-      value: `- ${formatCurrency(result.employeeContributionTotal)}`,
+      value: formatCurrency(result.employeeContributionTotal),
+      negative: true,
     },
     { label: "Dasar TER bulanan", value: formatCurrency(result.taxableMonthlyIncome) },
     { label: "Tarif efektif", value: formatPercent(result.taxRate) },
@@ -108,7 +118,15 @@ export default function App() {
                 {rows.map((row) => (
                   <tr key={row.label} className="border-b border-border last:border-b-0">
                     <td className="bg-muted/30 px-4 py-3 text-left">{row.label}</td>
-                    <td className="px-4 py-3 text-right font-medium">{row.value}</td>
+                    <td
+                      className={
+                        row.negative
+                          ? "px-4 py-3 text-right font-medium text-destructive"
+                          : "px-4 py-3 text-right font-medium"
+                      }
+                    >
+                      {row.negative ? `- ${row.value}` : row.value}
+                    </td>
                   </tr>
                 ))}
               </tbody>
