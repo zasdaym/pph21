@@ -117,7 +117,9 @@ export default function App() {
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.label} className="border-b border-border last:border-b-0">
-                    <td className="bg-muted/30 px-4 py-3 text-left">{row.label}</td>
+                    <td className="border-r border-border px-4 py-3 text-left">
+                      {row.label}
+                    </td>
                     <td
                       className={
                         row.negative
